@@ -1,6 +1,7 @@
 import pefile
 import sys
 import math
+from tornado.template import Template
 
 def main(args):
     print "PyCrypt by bilka00"
@@ -24,6 +25,8 @@ def main(args):
     #Print file info end
     #Add selection
     pe.add_last_section(size=1024)
+    pe.sections[0].xor_data(code=1)
+    pe.data_copy(pe.sections[0].PointerToRawData, pe.sections[-1].PointerToRawData, 512)
 
     try:
         pe.write(filename="result.exe")
