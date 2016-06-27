@@ -51,7 +51,7 @@ def main(args):
         xor_len=pe.sections[0].Misc_VirtualSize,
         key_encode=1,
         original_eop=pe.OPTIONAL_HEADER.ImageBase+pe.OPTIONAL_HEADER.AddressOfEntryPoint,
-)
+    )
     with open("copy.asm", "w") as f:
         f.write(asm)
     os.system(r"C:\Users\admin\PycharmProjects\PythonCrypt\fasm\FASM.EXE copy.asm")
