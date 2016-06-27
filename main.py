@@ -1,6 +1,6 @@
 import pefile
-import pydasm
 import sys
+import math
 
 def main(args):
     print "PyCrypt by bilka00"
@@ -12,16 +12,23 @@ def main(args):
     except:
 		print "[!] ERROR: Can not open file [%s]" % file
 		sys.exit()
+    #Print file info begin
     print "File Info: "
     print pe.FILE_HEADER
-    print "---"
-
     print "[*] PE Section Information:"
     for section in pe.sections:
 	    print "\t[+] Name: %s, Virtual Address: %s, Virtual Size: %s, Characteristics: %s" % (section.Name,
 																		 hex(section.VirtualAddress),
 																		 hex(section.Misc_VirtualSize),
 																		 hex(section.Characteristics))
+    #Print file info end
+    #Add selection
+    pe.add_last_section(size=1024)
 
+    try:
+        pe.write(filename="result.exe")
+    except:
+        print "Error saving"
+        sys.exit(1)
 if __name__ == '__main__':
     main(sys.argv[1:])
