@@ -16,7 +16,7 @@ use32
 	mov gs,ax
 	mov ax,gs
 
-	lea eax,[eax + edx + ( {{ hex(go) }} - 11b)]
+	lea eax,[eax + edx + ( {{ go }} - 11b)]
 	jmp eax
     Exit:
     push 0
