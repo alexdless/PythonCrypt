@@ -1,9 +1,13 @@
 import pefile
 import sys
 import os
+import random
 import math
 from tornado.template import Template
 
+def fasm_trash_gen():
+
+    return
 def main(args):
     print "PyCrypt by bilka00"
     print "License: GPL v3"
@@ -15,7 +19,7 @@ def main(args):
 		print "[!] ERROR: Can not open file [%s]" % file
 		sys.exit()
     #Print file info begin
-    print "File Info: "
+    print "[*] PE File Info: "
     print pe.FILE_HEADER
     print "[*] PE Section Information:"
     for section in pe.sections:
@@ -23,7 +27,13 @@ def main(args):
 																		 hex(section.VirtualAddress),
 																		 hex(section.Misc_VirtualSize),
 																		 hex(section.Characteristics))
+    print "[*] PE Import Information:"
+    for entry in pe.DIRECTORY_ENTRY_IMPORT:
+        print entry.dll
+        for imp in entry.imports:
+            print '\t', hex(imp.address), imp.name
     #Print file info end
+
     #Add selection
     pe.add_last_section(size=1024)
     pe.sections[0].xor_data(code=1)
@@ -38,6 +48,7 @@ def main(args):
     asm = Template(open("pack.tpl.asm", "r").read()).generate(
         imports=imports,
         go=pe.OPTIONAL_HEADER.ImageBase+pe.sections[-1].VirtualAddress+512,
+
     )
 
     with open("pack.asm", "w") as f:
