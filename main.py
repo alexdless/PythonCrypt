@@ -47,8 +47,7 @@ def main(args):
 
     asm = Template(open("pack.tpl.asm", "r").read()).generate(
         imports=imports,
-        go=pe.OPTIONAL_HEADER.ImageBase+pe.sections[-1].VirtualAddress+512,
-
+        go=pe.OPTIONAL_HEADER.ImageBase + pe.get_rva_from_offset(pe.sections[-1].PointerToRawData+512),
     )
 
     with open("pack.asm", "w") as f:
@@ -61,7 +60,7 @@ def main(args):
         copy_len=512,
         xor_len=pe.sections[0].Misc_VirtualSize,
         key_encode=1,
-        original_eop=pe.OPTIONAL_HEADER.ImageBase+pe.OPTIONAL_HEADER.AddressOfEntryPoint,
+        original_eop=pe.OPTIONAL_HEADER.ImageBase+pe.OPTIONAL_HEADER.AddressOfEntryPoint
     )
     with open("copy.asm", "w") as f:
         f.write(asm)
@@ -73,9 +72,6 @@ def main(args):
     pe.data_replace(offset=pe.sections[0].PointerToRawData, new_data=new_pack)
     pe.data_replace(offset=pe.sections[-1].PointerToRawData+512, new_data=new_copy)
     pe.sections[0].Characteristics |= pefile.SECTION_CHARACTERISTICS["IMAGE_SCN_MEM_WRITE"]
-
-
-
 
     try:
         pe.write(filename="result.exe")
